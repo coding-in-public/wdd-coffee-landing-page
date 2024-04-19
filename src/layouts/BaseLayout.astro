@@ -1,0 +1,36 @@
+---
+import Footer from "../components/Footer.astro";
+import Nav from "../components/Nav.astro";
+
+const siteData = {
+  title: "Coffee Website",
+  description:
+    "Discover the perfect brew at our coffee website! Explore premium beans, brewing tips, and accessories for an exceptional coffee experience. Join us today!",
+};
+
+const { title = siteData.title, description = siteData.description } =
+  Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;1,400;0,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body class="max-w-[2000px] mx-auto text-text">
+    <Nav />
+    <slot />
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,60 @@
+---
+import { NewsletterPeeps } from "astro:db";
+import { db } from "astro:db";
+
+const emails = await db.select().from(NewsletterPeeps);
+
+const listFormatter = new Intl.ListFormat("en-gb");
+
+const emailList = listFormatter.format(emails.map((e) => e.email));
+---
+
+<footer class="p-12">
+  <div class="py-6">{emailList}</div>
+  <form id="newsletter-form">
+    <div
+      class="bg-white shadow rounded-full py-2 px-4 focus-within:ring-4 ring-accent2 transition-shadow flex gap-4"
+    >
+      <input
+        type="email"
+        name="email"
+        class="focus:outline-none"
+        placeholder="Enter Email"
+        required
+      />
+    </div>
+    <button>Subscribe</button>
+  </form>
+</footer>
+
+<script>
+  const newsletterForm = document.querySelector(
+    "#newsletter-form"
+  ) as HTMLFormElement;
+
+  newsletterForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(newsletterForm);
+    const email = formData.get("email") as string;
+    try {
+      const res = await fetch("/api/addSubscriber.json", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(email),
+      });
+      if (!res.ok) {
+        throw new Error("There was a problem fetching the api endpoint");
+      }
+      const { success } = await res.json();
+      alert(success);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
+    }
+  });
+</script>

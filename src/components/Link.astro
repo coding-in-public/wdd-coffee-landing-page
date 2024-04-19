@@ -1,0 +1,78 @@
+---
+import { twMerge } from "tailwind-merge";
+import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
+
+const link = cva(
+  "focus:outline-none focus-visible:ring-4 ring-offset-2 grid grid-flow-col gap-2 max-w-fit place-items-center transition-all",
+  {
+    variants: {
+      intent: {
+        primary: [
+          "bg-dark1",
+          "rounded-full",
+          "ring-accent2",
+          "text-white",
+          "hover:bg-accent1",
+          "shadow-xl",
+          "shadow-dark2/30",
+          "hover:shadow-none",
+        ],
+        secondary: [
+          "bg-white",
+          "text-gray-800",
+          "border-gray-400",
+          "hover:bg-gray-100",
+        ],
+        icon: ["bg-white", "ring-accent2", "hover:scale-105", "rounded-full"],
+        nav: [
+          "rounded-full",
+          "bg-white",
+          "ring-accent2",
+          "text-text",
+          "aria-current:text-accent1",
+          "aria-current:hover:text-accent2",
+          "hover:text-accent1",
+        ],
+      },
+      size: {
+        xsmall: ["text-sm", "p-1"],
+        small: ["text-sm", "py-1", "px-2"],
+        medium: ["text-base", "py-2", "px-4"],
+        large: ["text-base", "py-3", "px-8"],
+      },
+    },
+    compoundVariants: [
+      { intent: "primary", size: "medium", class: "uppercase" },
+    ],
+  }
+);
+
+export interface Props extends HTMLAttributes<"a">, VariantProps<typeof link> {
+  classes?: string;
+  href: string;
+  currentPage?: boolean;
+}
+
+/**
+ * For Astro components, we recommend setting your defaultVariants within
+ * Astro.props (which are `undefined` by default)
+ */
+const {
+  intent = "primary",
+  size = "medium",
+  classes,
+  href,
+  currentPage,
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={twMerge(link({ intent, size }), classes)}
+  {...rest}
+  aria-current={currentPage ? "page" : "false"}
+>
+  <slot />
+</a>
